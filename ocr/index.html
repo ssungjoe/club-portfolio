@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="OCR Converter">
+    <meta name="description" content="English Only">
+
+    <meta property="og:title" content="OCR Converter" />
+    <meta property="og:description" content="English Only" />
+    <meta property="og:locale" content="ko_KR" />
+    <title>OCR Converter</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" type="text/css" href="http://ssungjoe.dothome.co.kr/semantic/semantic.css">
+    <script src="http://ssungjoe.dothome.co.kr/semantic/semantic.js"></script>
+</head>
+<body>
+    <div class="ui black inverted vertical footer segment">
+        <div class="ui inverted secondary menu">
+            <a id="menu" class="item" href="http://ssungjoe.dothome.co.kr">
+                메인
+            </a>
+        </div>
+    </div>
+    <div class="ui grid">
+        <div class="two wide column"></div>
+        <div class="twelve wide column"></div>
+        <div class="two wide column"></div>
+    </div>
+    <div class="ui grid">
+        <div class="one wide column"></div>
+        <div class="fourteen wide column">
+            <h1 class="ui header">OCR Converter<small>&nbsp;(English Only)</small></h1>
+            <form class="panel panel-default" runat="server">
+                <div class="panel-body">
+                    <input type="file" id="input_image" name="input_image" onchange="LoadImg(this);" />
+                    <br>
+                    <table align="center" cellpadding="10" width="80%">
+                        <tr bgcolor="#d4d4d4">
+                            <div id="ocr_results"></div>
+                            <br>
+                            <strong><div id="ocr_status"></div></strong>
+                        </tr>
+                    </table>
+                    <br>
+                    <img id="image_preview" style="width: 350px; height: auto;" />
+                </div>
+            </form>
+        </div>
+        <div class="one wide column"></div>
+    </div>
+    <br />
+    <div class="ui grid">
+        <div class="one wide column"></div>
+        <div class="fourteen wide column">
+            <div class="ui clearing divider"></div>
+            <h1 class="ui header">OCR이란?</h1>
+            <div class="ui relaxed divided list">
+                <div class="item">
+                    <div class="content">
+                        <a class="header">Optical Character Recognition</a>
+                        <div class="description">
+                            OCR은 광학식 문자 판독의 줄임말로, 말 그대로<br />
+                            종이 위에 써 놓은 글씨를 인지하여 텍스트 데이터로 치환하는 것입니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui clearing divider"></div>
+        </div>
+        <div class="one wide column"></div>
+    </div>
+    <br />
+    <div class="ui black inverted vertical footer segment">
+        <div class="ui grid">
+            <div class="two wide column"></div>
+            <div class="eight wide column">
+                <div class="ui left aligned container">
+                    Copyright &copy; 2020. Joe
+                    <br />
+                    All rights reserved.
+                </div>
+            </div>
+            <div class="five wide column">
+            </div>
+            <div class="one wide column"></div>
+        </div>
+    </div>
+
+    <script>
+        $('#menu').click(function () {
+            $('.ui.left.sidebar').sidebar('setting', 'transition', 'push').sidebar('toggle');
+        });
+    </script>
+</body>
+<script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        var input_image = document.getElementById('input_image');
+        input_image.addEventListener('change', handleInputChange);
+        readURL(input_image);
+    });
+    function handleInputChange(event) {
+        var input = event.target;
+        var file = input.files[0];
+        console.log(file);
+        Tesseract.recognize(file).progress(function (result) { // Tesseract.js
+            document.getElementById('ocr_status')
+            .innerText = result['status'] + ' (' +
+            (result['progress'] * 100).toFixed(1) + '%)';
+        }).then(function (result) {
+            document.getElementById('ocr_results')
+            .innerText = result.text;
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+    }
+    function LoadImg(value) {
+        if(value.files && value.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image_preview').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(value.files[0]);
+        }
+    }
+</script>
+</html>
