@@ -1,3 +1,3 @@
 # club-portfolio
 
-https://ssungjoe.dothome.co.kr
+http://ssungjoe.dothome.co.kr
